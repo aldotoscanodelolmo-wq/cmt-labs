@@ -239,7 +239,11 @@ app.post('/api/tests/save', authenticateToken, async (req, res) => {
 app.get('/api/tests', authenticateToken, async (req, res) => {
   try {
     const user_id = req.user.user_id;
-    const { project, contractor, technician, test_code } = req.query;
+    // Support both camelCase and snake_case parameter names
+    const project = req.query.project || req.query.projectName;
+    const contractor = req.query.contractor || req.query.contractorName;
+    const technician = req.query.technician || req.query.technicianName;
+    const test_code = req.query.test_code || req.query.testCode;
 
     let query = supabase
       .from('tests')
