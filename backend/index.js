@@ -264,10 +264,8 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
   }
 });
 
-// GET single test - MUST come AFTER /api/tests routes to avoid pattern matching
-// since /api/tests/:id would match /api/tests/search/advanced
+// Advanced search endpoint
 app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
-  // Alias to main tests endpoint - forward to the same logic
   try {
     const user_id = req.user.user_id;
     const project = req.query.project || req.query.projectName;
@@ -287,9 +285,14 @@ app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
 
     const { data, error } = await query.order('created_at', { ascending: false });
 
-    if (error) return res.status(400).json({ error: error.message });
+    if (error) {
+      console.error('Database error:', error);
+      return res.status(400).json({ error: error.message });
+    }
+
     res.json({ tests: data });
   } catch (error) {
+    console.error('Search error:', error);
     res.status(500).json({ error: error.message });
   }
 });
