@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMT Labs - Construction Materials Testing Software</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Design System */
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --accent-blue: #0ea5e9;
+            --neutral-50: #f8fafc;
+            --neutral-100: #f1f5f9;
+            --neutral-200: #e2e8f0;
+            --neutral-600: #475569;
+            --neutral-700: #334155;
+            --text-dark: #0f172a;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #ffffff;
+        }
+
+        /* Header / Navigation */
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--neutral-700);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.7) 0%, rgba(30, 58, 138, 0.7) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%231e3a8a" width="1200" height="600"/><circle cx="600" cy="300" r="200" fill="%230ea5e9" opacity="0.1"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 160px 24px;
+            text-align: center;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 22px;
+            opacity: 0.98;
+            margin-bottom: 48px;
+            color: #e0e7ff;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: #fbbf24;
+            color: #0f172a;
+            padding: 18px 48px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-cta:hover {
+            background: #f59e0b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Section */
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        section h2 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            letter-spacing: -0.5px;
+        }
+
+        section .section-description {
+            font-size: 18px;
+            color: var(--neutral-600);
+            max-width: 600px;
+            margin-bottom: 60px;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about {
+            background: var(--neutral-50);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-text h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        .about-text p {
+            font-size: 16px;
+            color: var(--neutral-600);
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            background: linear-gradient(135deg, #1e40af 0%, #0ea5e9 100%);
+            height: 450px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-image::before {
+            content: "🔬";
+            font-size: 80px;
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-image {
+                height: 300px;
+            }
+        }
+
+        /* Services Section */
+        .services {
+            background: #ffffff;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+        }
+
+        .service-card:hover {
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+            border-color: #0ea5e9;
+            transform: translateY(-6px);
+        }
+
+        .service-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-blue);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .service-card p {
+            font-size: 15px;
+            color: var(--neutral-600);
+            line-height: 1.8;
+        }
+
+        /* Capabilities Section */
+        .capabilities {
+            background: var(--neutral-50);
+        }
+
+        .capabilities-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .capabilities-image {
+            background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+            height: 450px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .capabilities-image::before {
+            content: "📊";
+            font-size: 80px;
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .capabilities-list {
+            list-style: none;
+        }
+
+        .capabilities-list li {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            font-size: 16px;
+            color: var(--neutral-600);
+            align-items: flex-start;
+        }
+
+        .capabilities-list li::before {
+            content: "✓";
+            color: var(--accent-blue);
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .capabilities-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .capabilities-image {
+                height: 300px;
+            }
+        }
+
+        /* Why Choose Us Section */
+        .why-choose {
+            background: #ffffff;
+        }
+
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 40px;
+        }
+
+        .why-card {
+            text-align: center;
+        }
+
+        .why-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .why-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+
+        .why-card p {
+            font-size: 15px;
+            color: var(--neutral-600);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1e3a8a 100%);
+            color: white;
+            text-align: center;
+            padding: 140px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: rgba(14, 165, 233, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .cta h2 {
+            color: white;
+            font-size: 48px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .cta p {
+            font-size: 20px;
+            margin-bottom: 48px;
+            opacity: 0.95;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #fbbf24;
+            color: #0f172a;
+            padding: 18px 48px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-button:hover {
+            background: #f59e0b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0e27;
+            color: #94a3b8;
+            padding: 40px 24px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Utility */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-60 {
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+
+            section h2 {
+                font-size: 32px;
+            }
+
+            .services-grid,
+            .why-choose-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">CMT Labs</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#capabilities">Capabilities</a></li>
+                    <li><a href="#why">Why Choose</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Testing Made Simple</h1>
+            <p>From field to report. One platform. No more manual workflows.</p>
+            <a href="#contact" class="hero-cta">Start Free Trial</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>About CMT Labs</h2>
+            <p class="section-description">Purpose-built software for construction materials testing labs. We solve the real problems you face every day.</p>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Modern Testing Management</h3>
+                    <p>Construction materials testing labs spend countless hours on manual data entry, form management, and compliance documentation. CMT Labs eliminates that friction.</p>
+                    <p>Our platform connects field technicians with office operations through a single, integrated system. Test data flows from field to report without manual handoffs or re-entry.</p>
+                    <p>Built specifically for ASTM testing workflows, we handle the technical complexity so you can focus on accuracy and compliance.</p>
+                </div>
+                <div class="about-image">
+                    [Hero imagery: Field technician with equipment or testing in progress]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2>Core Services</h2>
+            <p class="section-description">Everything your lab needs to manage testing from field to report.</p>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📋</div>
+                    <h3>ASTM Form Management</h3>
+                    <p>23 ASTM test protocols pre-configured. Field technicians follow standardized procedures with built-in guidance.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📸</div>
+                    <h3>Photo & Evidence Capture</h3>
+                    <p>QR code scanning and photo documentation linked directly to test records. Complete chain of custody.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📄</div>
+                    <h3>Automated Reporting</h3>
+                    <p>One-click PDF generation with all test data, photos, and compliance notes. Ready to deliver to clients.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔍</div>
+                    <h3>Test Retrieval & Search</h3>
+                    <p>Instantly find any test by project, contractor, technician, or test code. Powerful filtering for compliance audits.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">✓</div>
+                    <h3>Certification & Compliance</h3>
+                    <p>Technician certification tracking and mandatory signature fields ensure audit-ready documentation.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>Multi-Device Support</h3>
+                    <p>Works on laptops, tablets, and phones. Responsive design meets technicians where they work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section class="capabilities" id="capabilities">
+        <div class="container">
+            <h2>Capabilities Built In</h2>
+            <p class="section-description">Everything you need to run efficient, compliant testing operations.</p>
+
+            <div class="capabilities-content">
+                <ul class="capabilities-list">
+                    <li>23 ASTM testing protocols (C39, C128, D698, D1883, and more)</li>
+                    <li>Offline-first operation with automatic sync</li>
+                    <li>QR code scanning and photo attachment</li>
+                    <li>Real-time PDF generation and export</li>
+                    <li>Advanced test search and filtering</li>
+                    <li>Technician certification management</li>
+                    <li>Cloud-based data persistence</li>
+                    <li>Mobile-responsive interface</li>
+                    <li>ASTM compliance documentation</li>
+                </ul>
+                <div class="capabilities-image">
+                    [Capabilities imagery: Dashboard or interface preview]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Section -->
+    <section class="why-choose" id="why">
+        <div class="container">
+            <h2 class="text-center">Why Choose CMT Labs</h2>
+            <p class="section-description text-center">Built by people who understand testing labs.</p>
+
+            <div class="why-choose-grid">
+                <div class="why-card">
+                    <div class="why-number">⚡</div>
+                    <h3>Fast Implementation</h3>
+                    <p>Get running in days, not months. We handle ASTM complexity so you don't have to.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-number">💼</div>
+                    <h3>Purpose-Built</h3>
+                    <p>Not a generic LIMS. Built specifically for construction materials testing workflows.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-number">🔒</div>
+                    <h3>Compliance-Ready</h3>
+                    <p>Certification tracking, audit trails, and ASTM documentation built in from day one.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-number">📊</div>
+                    <h3>Field-to-Report</h3>
+                    <p>Integrated workflow. Technician captures. Office verifies. Client receives report. No re-entry.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-number">💡</div>
+                    <h3>Modern Design</h3>
+                    <p>Built with current technology. Works on any device. Intuitive for your team.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-number">🤝</div>
+                    <h3>Dedicated Support</h3>
+                    <p>Technical support from people who understand your business and your challenges.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>Get Your Lab Running Better</h2>
+            <p>Join construction materials labs who've eliminated manual workflows, reduced errors, and improved compliance accuracy. Start a free trial today.</p>
+            <a href="mailto:contact@cmtlabs.io" class="cta-button">Start Free Trial</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 CMT Labs. Construction Materials Testing Software. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
