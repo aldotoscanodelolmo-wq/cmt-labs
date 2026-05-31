@@ -183,7 +183,10 @@ app.post('/api/tests/save', authenticateToken, async (req, res) => {
 
     const user_id = req.user.user_id;
 
-    if (test_id) {
+    // Check if test_id is a valid UUID (36 chars with standard format)
+    const isValidUUID = test_id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(test_id);
+
+    if (isValidUUID) {
       // Update existing test
       const { data, error } = await supabase
         .from('tests')
