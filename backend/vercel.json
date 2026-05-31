@@ -1,6 +1,13 @@
 {
   "version": 2,
+  "buildCommand": "npm install",
+  "outputDirectory": "./api",
   "env": {
     "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
   }
 }
