@@ -1,4 +1,3 @@
 {
-  "outputDirectory": "frontend",
-  "buildCommand": "echo 'Static site, no build required'"
+  "outputDirectory": "frontend"
 }
