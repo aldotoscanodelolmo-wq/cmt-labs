@@ -264,8 +264,8 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
   }
 });
 
-// TEMPORARY: Use different route path to debug
-app.get('/api/search-tests', authenticateToken, async (req, res) => {
+// Search endpoint - working path
+app.get('/api/tests/search', authenticateToken, async (req, res) => {
   try {
     const user_id = req.user.user_id;
     const project = req.query.project || req.query.projectName;
