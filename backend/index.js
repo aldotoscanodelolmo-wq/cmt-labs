@@ -264,21 +264,26 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
   }
 });
 
-// Advanced search with multiple filter parameters
+// GET single test - MUST come AFTER /api/tests routes to avoid pattern matching
+// since /api/tests/:id would match /api/tests/search/advanced
 app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
+  // Alias to main tests endpoint - forward to the same logic
   try {
     const user_id = req.user.user_id;
-    const { projectName, contractorName, technicianName, testCode } = req.query;
+    const project = req.query.project || req.query.projectName;
+    const contractor = req.query.contractor || req.query.contractorName;
+    const technician = req.query.technician || req.query.technicianName;
+    const test_code = req.query.test_code || req.query.testCode;
 
     let query = supabase
       .from('tests')
       .select('*')
       .eq('user_id', user_id);
 
-    if (projectName) query = query.eq('project_name', projectName);
-    if (contractorName) query = query.eq('contractor_name', contractorName);
-    if (technicianName) query = query.eq('technician_name', technicianName);
-    if (testCode) query = query.eq('test_type', testCode);
+    if (project) query = query.eq('project_name', project);
+    if (contractor) query = query.eq('contractor_name', contractor);
+    if (technician) query = query.eq('technician_name', technician);
+    if (test_code) query = query.eq('test_type', test_code);
 
     const { data, error } = await query.order('created_at', { ascending: false });
 
