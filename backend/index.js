@@ -264,37 +264,6 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
   }
 });
 
-// Search endpoint - working path
-app.get('/api/tests/search', authenticateToken, async (req, res) => {
-  try {
-    const user_id = req.user.user_id;
-    const project = req.query.project || req.query.projectName;
-    const contractor = req.query.contractor || req.query.contractorName;
-    const technician = req.query.technician || req.query.technicianName;
-    const test_code = req.query.test_code || req.query.testCode;
-
-    let query = supabase
-      .from('tests')
-      .select('*')
-      .eq('user_id', user_id);
-
-    if (project) query = query.eq('project_name', project);
-    if (contractor) query = query.eq('contractor_name', contractor);
-    if (technician) query = query.eq('technician_name', technician);
-    if (test_code) query = query.eq('test_type', test_code);
-
-    const { data, error } = await query.order('created_at', { ascending: false });
-
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
-
-    res.json({ tests: data });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Get single test
 app.get('/api/tests/:id', authenticateToken, async (req, res) => {
   try {
@@ -360,6 +329,68 @@ app.delete('/api/tests/:id', authenticateToken, async (req, res) => {
 
     if (error) return res.status(400).json({ error: error.message });
     res.json({ message: 'Test deleted' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Search tests endpoint
+app.get('/api/tests/search', authenticateToken, async (req, res) => {
+  try {
+    const user_id = req.user.user_id;
+    const project = req.query.project || req.query.projectName;
+    const contractor = req.query.contractor || req.query.contractorName;
+    const technician = req.query.technician || req.query.technicianName;
+    const test_code = req.query.test_code || req.query.testCode;
+
+    let query = supabase
+      .from('tests')
+      .select('*')
+      .eq('user_id', user_id);
+
+    if (project) query = query.eq('project_name', project);
+    if (contractor) query = query.eq('contractor_name', contractor);
+    if (technician) query = query.eq('technician_name', technician);
+    if (test_code) query = query.eq('test_type', test_code);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ tests: data });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Search tests advanced endpoint
+app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
+  try {
+    const user_id = req.user.user_id;
+    const project = req.query.project || req.query.projectName;
+    const contractor = req.query.contractor || req.query.contractorName;
+    const technician = req.query.technician || req.query.technicianName;
+    const test_code = req.query.test_code || req.query.testCode;
+
+    let query = supabase
+      .from('tests')
+      .select('*')
+      .eq('user_id', user_id);
+
+    if (project) query = query.eq('project_name', project);
+    if (contractor) query = query.eq('contractor_name', contractor);
+    if (technician) query = query.eq('technician_name', technician);
+    if (test_code) query = query.eq('test_type', test_code);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ tests: data });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
