@@ -3312,7 +3312,7 @@
                 tests = tests.filter(test => {
                     // Check project filter
                     if (project) {
-                        const formData = test.formData || {};
+                        const formData = test.form_data || {};
                         const projectMatch = Object.values(formData).some(field =>
                             field && field.value && String(field.value).toLowerCase().includes(project)
                         );
@@ -3321,7 +3321,7 @@
 
                     // Check contractor filter
                     if (contractor) {
-                        const formData = test.formData || {};
+                        const formData = test.form_data || {};
                         const contractorMatch = Object.values(formData).some(field =>
                             field && field.value && String(field.value).toLowerCase().includes(contractor)
                         );
@@ -3330,7 +3330,7 @@
 
                     // Check technician filter
                     if (technician) {
-                        const formData = test.formData || {};
+                        const formData = test.form_data || {};
                         const technicianMatch = Object.values(formData).some(field =>
                             field && field.value && String(field.value).toLowerCase().includes(technician)
                         );
@@ -3404,7 +3404,7 @@
 
             tests.forEach((test, index) => {
                 // Parse formData if it's a string
-                let formData = test.formData;
+                let formData = test.form_data;
                 if (typeof formData === 'string') {
                     try {
                         formData = JSON.parse(formData);
@@ -3524,8 +3524,8 @@
                 doc.setFontSize(9);
                 doc.setTextColor(50, 50, 50);
 
-                if (test.formData) {
-                    const formData = typeof test.formData === 'string' ? JSON.parse(test.formData) : test.formData;
+                if (test.form_data) {
+                    const formData = typeof test.form_data === 'string' ? JSON.parse(test.form_data) : test.form_data;
                     Object.entries(formData).forEach(([key, field]) => {
                         if (yPosition > pageHeight - 20) {
                             doc.addPage();
