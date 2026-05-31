@@ -260,6 +260,31 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
   }
 });
 
+// Advanced search with multiple filter parameters
+app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
+  try {
+    const user_id = req.user.user_id;
+    const { projectName, contractorName, technicianName, testCode } = req.query;
+
+    let query = supabase
+      .from('tests')
+      .select('*')
+      .eq('user_id', user_id);
+
+    if (projectName) query = query.eq('project_name', projectName);
+    if (contractorName) query = query.eq('contractor_name', contractorName);
+    if (technicianName) query = query.eq('technician_name', technicianName);
+    if (testCode) query = query.eq('test_type', testCode);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) return res.status(400).json({ error: error.message });
+    res.json({ tests: data });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get single test
 app.get('/api/tests/:id', authenticateToken, async (req, res) => {
   try {
