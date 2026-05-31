@@ -6,7 +6,7 @@
 
 const CMTLabsAPI = {
     // Configuration
-    API_URL: 'https://cmt-labs-backend.vercel.app',
+    API_URL: 'https://cmt-labs-production.up.railway.app',
 
     // Get the JWT token from localStorage
     getToken() {
