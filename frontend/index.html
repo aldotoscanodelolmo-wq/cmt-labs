@@ -3414,7 +3414,7 @@
                 }
                 formData = formData || {};
 
-                const testId = test.test_id;
+                const testId = test.id;
                 const cardId = `result-card-${index}`;
                 const detailsId = `result-details-${index}`;
 
@@ -3422,9 +3422,9 @@
                     <div id="${cardId}" style="background: white; padding: 15px; margin-bottom: 10px; border-left: 4px solid #2e7d32; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
                             <div>
-                                <div style="font-weight: 600; color: #2e7d32; margin-bottom: 8px;">${test.test_code} - ${test.test_name}</div>
+                                <div style="font-weight: 600; color: #2e7d32; margin-bottom: 8px;">${test.test_type}</div>
                                 <div style="font-size: 12px; color: #666;">
-                                    <p><strong>Test ID:</strong> ${test.test_id}</p>
+                                    <p><strong>Test ID:</strong> ${test.id}</p>
                                     <p><strong>Project:</strong> ${formData.projectName?.value || formData.project?.value || 'N/A'}</p>
                                     <p><strong>Contractor:</strong> ${formData.contractorName?.value || test.contractor || 'N/A'}</p>
                                     <p><strong>Technician:</strong> ${formData.technicianName?.value || test.created_by || 'N/A'}</p>
@@ -3466,10 +3466,10 @@
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-                const testTitle = test.test_name || 'Unknown Test';
-                const testCode = test.test_code || 'UNKNOWN';
-                const testId = test.test_id || 'N/A';
-                const createdBy = test.created_by || 'Unknown';
+                const testTitle = test.test_type || 'Unknown Test';
+                const testCode = test.test_type || 'UNKNOWN';
+                const testId = test.id || 'N/A';
+                const createdBy = test.user_id || 'Unknown';
                 const createdAt = test.created_at ? new Date(test.created_at).toLocaleString() : 'N/A';
 
                 let yPosition = 15;
