@@ -3295,21 +3295,18 @@
             console.log('🔍 Searching with filters:', { project, contractor, technician, testCode });
 
             try {
-                // Start with API call (send available filters)
-                const params = new URLSearchParams();
-                if (contractor) params.append('contractorName', contractor);
-                if (technician) params.append('technicianName', technician);
-                if (testCode) params.append('testCode', testCode);
+                // Build filters object for API call
+                const filters = {};
+                if (contractor) filters.contractor = contractor;
+                if (technician) filters.technician = technician;
+                if (testCode) filters.test_code = testCode;
 
-                console.log('API params:', params.toString());
+                console.log('API filters:', filters);
 
-                // Call API
-                const response = await fetch(`/api/tests/search/advanced?${params.toString()}`);
-                const result = await response.json();
+                // Call API using CMTLabsAPI which has the correct Railway backend URL
+                let tests = await CMTLabsAPI.getTests(filters);
 
-                console.log('API response:', result);
-
-                let tests = result.data || [];
+                console.log('API response:', tests);
 
                 // Apply ALL filters locally to ensure AND logic (all conditions must match)
                 tests = tests.filter(test => {
@@ -3370,23 +3367,19 @@
             console.log('🔍 Searching for QR code:', qrCode);
 
             try {
-                const response = await fetch(`/api/tests/${qrCode}`);
-                console.log('API response status:', response.status);
-
-                const result = await response.json();
+                // Use CMTLabsAPI which has the correct Railway backend URL
+                const result = await CMTLabsAPI.getTest(qrCode);
                 console.log('API response:', result);
 
-                if (response.ok && result.success && result.data) {
-                    console.log('✅ Found test:', result.data.test_id);
-                    displayResults([result.data]);
-                } else if (response.status === 404) {
+                if (result && result.test) {
+                    console.log('✅ Found test:', result.test.id);
+                    displayResults([result.test]);
+                } else {
                     console.warn('❌ Test not found with ID:', qrCode);
                     alert(`❌ No test found with ID: ${qrCode}\n\nMake sure you entered the correct Test ID.`);
                     document.getElementById('noResults').style.display = 'block';
                     document.getElementById('retrieveResults').style.display = 'none';
-                } else {
-                    console.error('❌ Unexpected response:', result);
-                    document.getElementById('noResults').style.display = 'block';
+                }
                     document.getElementById('retrieveResults').style.display = 'none';
                 }
             } catch (error) {
