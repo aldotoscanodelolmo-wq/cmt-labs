@@ -213,6 +213,7 @@ app.post('/api/tests/save', authenticateToken, async (req, res) => {
         .from('tests')
         .insert([
           {
+            id: test_id,
             user_id,
             test_type,
             form_data,
