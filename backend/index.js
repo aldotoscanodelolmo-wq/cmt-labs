@@ -213,8 +213,8 @@ app.post('/api/tests/save', authenticateToken, async (req, res) => {
         .from('tests')
         .insert([
           {
-            id: test_id,
             user_id,
+            test_id: test_id
             test_type,
             form_data,
             test_results: form_data,
@@ -333,12 +333,32 @@ app.get('/api/tests/:id', authenticateToken, async (req, res) => {
     const user_id = req.user.user_id;
     const { id } = req.params;
 
-    const { data: test, error: testError } = await supabase
+    // Try to find by test_id (QR code) first, then fall back to id (UUID)
+    let test;
+    let testError;
+    
+    // First try searching by test_id
+    const { data: testByQR, error: qrError } = await supabase
       .from('tests')
       .select('*')
-      .eq('id', id)
+      .eq('test_id', id)
       .eq('user_id', user_id)
       .single();
+    
+    if (qrError && qrError.code === 'PGRST116') {
+      // Not found by test_id, try by id (UUID)
+      const { data: testByUUID, error: uuidError } = await supabase
+        .from('tests')
+        .select('*')
+        .eq('id', id)
+        .eq('user_id', user_id)
+        .single();
+      test = testByUUID;
+      testError = uuidError;
+    } else {
+      test = testByQR;
+      testError = qrError;
+    }
 
     if (testError) return res.status(404).json({ error: 'Test not found' });
 
