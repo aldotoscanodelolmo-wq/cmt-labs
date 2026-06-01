@@ -214,7 +214,7 @@ app.post('/api/tests/save', authenticateToken, async (req, res) => {
         .insert([
           {
             user_id,
-            test_id: test_id
+            test_id: test_id,
             test_type,
             form_data,
             test_results: form_data,
