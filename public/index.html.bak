@@ -3372,7 +3372,7 @@
                 console.log('API response:', result);
 
                 if (result && result.test) {
-                    console.log('✅ Found test:', result.test.test_id);
+                    console.log('✅ Found test:', result.test.id);
                     displayResults([result.test]);
                 } else {
                     console.warn('❌ Test not found with ID:', qrCode);
