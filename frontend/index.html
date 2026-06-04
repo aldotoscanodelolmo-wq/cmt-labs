@@ -2496,7 +2496,7 @@
 
             // Create minimal QR data (shorter to avoid overflow)
             const qrData = uniqueTestId + '|' + test.code;
-
+            const qrData = "https://cmt-labs.vercel.app/?testId=" + uniqueTestId;
             currentTestQRData = qrData;
 
             // Clear previous QR
@@ -3971,6 +3971,19 @@
         // Initialize authentication manager when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
             window.authManager = new AuthenticationManager();
+            
+            // Handle QR code scans - if testId in URL, auto-retrieve
+            const params = new URLSearchParams(window.location.search);
+            const testId = params.get('testId');
+            if (testId) {
+                console.log('🔍 QR code scanned - Auto-retrieving test:', testId);
+                setTimeout(() => {
+                    const input = document.getElementById('retrieveSearchInput');
+                    if (input) input.value = testId;
+                    const btn = document.querySelector('button[onclick="searchQRCode()"]');
+                    if (btn) btn.click();
+                }, 500);
+            }
         });
 
         // Close modal when clicking outside of it
