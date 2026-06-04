@@ -900,6 +900,7 @@
     <!-- External Libraries for PDF and QR Code Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
     <!-- API Client for Backend Communication -->
     <script src="./api-client.js"></script>
     <!-- Test-Specific Form Configurations -->
@@ -1882,10 +1883,12 @@
                 <div style="background: #f9f9f9; padding: 20px; border-radius: 6px; margin-bottom: 25px; border: 2px solid #2e7d32;">
                     <h3 style="color: #2e7d32; margin-bottom: 8px; font-size: 14px;">Scan or Enter Test ID:</h3>
                     <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Enter the Test ID from your PDF (e.g., QR-C39-ABC123)</p>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px;">
                         <input type="text" id="qrCodeInput" placeholder="e.g., QR-C39-ABC123" style="padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                        <button onclick="openQRScanner()" style="padding: 12px 18px; background: #FF9800; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; white-space: nowrap;">📷 Scan</button>
                         <button onclick="searchByQRCode()" style="padding: 12px; background: #2e7d32; color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">🔍 Search</button>
                     </div>
+                </div>
                 </div>
 
                 <!-- SIMPLE FILTERS -->
@@ -3357,6 +3360,97 @@
         }
 
         async function searchByQRCode() {
+
+        function openQRScanner() {
+            // Create modal for camera
+            const modal = document.createElement('div');
+            modal.id = 'qrScannerModal';
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000;';
+            
+            const container = document.createElement('div');
+            container.style.cssText = 'width: 90%; max-width: 500px; background: white; border-radius: 8px; padding: 20px; text-align: center;';
+            
+            const title = document.createElement('h3');
+            title.textContent = '📷 Scan QR Code';
+            title.style.cssText = 'color: #2e7d32; margin-bottom: 15px;';
+            
+            const video = document.createElement('video');
+            video.id = 'qrScannerVideo';
+            video.style.cssText = 'width: 100%; border-radius: 4px; margin-bottom: 15px;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = '✕ Close';
+            closeBtn.style.cssText = 'padding: 10px 20px; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;';
+            closeBtn.onclick = () => {
+                stopQRScanning();
+                modal.remove();
+            };
+            
+            container.appendChild(title);
+            container.appendChild(video);
+            container.appendChild(closeBtn);
+            modal.appendChild(container);
+            document.body.appendChild(modal);
+            
+            // Start camera
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.play();
+                    scanQRFromVideo(video);
+                })
+                .catch(err => {
+                    console.error('Camera access denied:', err);
+                    alert('❌ Cannot access camera. Make sure you granted permission.');
+                    modal.remove();
+                });
+        }
+        
+        let scanningActive = false;
+        
+        function scanQRFromVideo(video) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            const scan = () => {
+                if (!scanningActive) {
+                    scanningActive = true;
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0);
+                    
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    if (code) {
+                        console.log('✅ QR Code detected:', code.data);
+                        // Extract test ID from URL or use as-is
+                        let testId = code.data;
+                        if (testId.includes('testId=')) {
+                            testId = testId.split('testId=')[1];
+                        }
+                        document.getElementById('qrCodeInput').value = testId;
+                        stopQRScanning();
+                        document.getElementById('qrScannerModal').remove();
+                    }
+                    scanningActive = false;
+                }
+                
+                if (video.srcObject) {
+                    requestAnimationFrame(scan);
+                }
+            };
+            
+            scan();
+        }
+        
+        function stopQRScanning() {
+            const video = document.getElementById('qrScannerVideo');
+            if (video && video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+        }
+
             const qrCode = document.getElementById('qrCodeInput').value.trim();
             if (!qrCode) {
                 alert('Please enter or scan a QR code');
