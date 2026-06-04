@@ -2495,7 +2495,6 @@
             const uniqueTestId = 'QR-' + test.code.replace(/\s+/g, '') + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 
             // Create minimal QR data (shorter to avoid overflow)
-            const qrData = uniqueTestId + '|' + test.code;
             const qrData = "https://cmt-labs.vercel.app/?testId=" + uniqueTestId;
             currentTestQRData = qrData;
 
