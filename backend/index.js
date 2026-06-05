@@ -253,7 +253,7 @@ app.get('/api/tests', authenticateToken, async (req, res) => {
 
     if (project) query = query.eq('project_name', project);
     if (contractor) query = query.eq('contractor_name', contractor);
-    if (technician) query = query.eq('technician_name', technician);
+    if (technician) query = query.ilike('technician_name', '%' + technician + '%');
     if (test_code) query = query.eq('test_type', test_code);
 
     const { data, error } = await query.order('created_at', { ascending: false });
@@ -281,7 +281,7 @@ app.get('/api/tests/search', authenticateToken, async (req, res) => {
 
     if (project) query = query.eq('project_name', project);
     if (contractor) query = query.eq('contractor_name', contractor);
-    if (technician) query = query.eq('technician_name', technician);
+    if (technician) query = query.ilike('technician_name', '%' + technician + '%');
     if (test_code) query = query.eq('test_type', test_code);
 
     const { data, error } = await query.order('created_at', { ascending: false });
@@ -312,7 +312,7 @@ app.get('/api/tests/search/advanced', authenticateToken, async (req, res) => {
 
     if (project) query = query.eq('project_name', project);
     if (contractor) query = query.eq('contractor_name', contractor);
-    if (technician) query = query.eq('technician_name', technician);
+    if (technician) query = query.ilike('technician_name', '%' + technician + '%');
     if (test_code) query = query.eq('test_type', test_code);
 
     const { data, error } = await query.order('created_at', { ascending: false });
