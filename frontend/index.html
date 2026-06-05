@@ -2498,7 +2498,7 @@
             // Generate unique test ID
             const uniqueTestId = 'QR-' + test.code.replace(/\s+/g, '') + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 
-            // Create minimal QR data (shorter to avoid overflow)
+            const qrData = 'https://cmt-labs.vercel.app/?testId=' + uniqueTestId; // Force rebuild Fri Jun  5 01:47:12 UTC 2026
             const qrData = "https://cmt-labs.vercel.app/?testId=" + uniqueTestId;
             currentTestQRData = qrData;
 
