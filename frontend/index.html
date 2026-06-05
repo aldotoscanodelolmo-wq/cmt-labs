@@ -2498,7 +2498,6 @@
             // Generate unique test ID
             const uniqueTestId = 'QR-' + test.code.replace(/\s+/g, '') + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 
-            const qrData = 'cmt-labs.vercel.app/?testId=' + uniqueTestId;
             const qrData = "https://cmt-labs.vercel.app/?testId=" + uniqueTestId;
             currentTestQRData = qrData;
 
