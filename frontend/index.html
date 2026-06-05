@@ -3043,7 +3043,9 @@
                 }
 
                 // ===== SAVE DATA TO DATABASE =====
+                console.log('💾 SAVE DATA TO DATABASE SECTION REACHED');
                 if (typeof CMTLabsAPI !== 'undefined') {
+                    console.log('✅ CMTLabsAPI is defined');
                     // Extract just the unique test ID from QR data
                     let testId = qrData;
                     console.log('🔍 Raw QR Data:', qrData);
