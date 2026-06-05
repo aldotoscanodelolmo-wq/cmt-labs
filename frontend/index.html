@@ -3044,11 +3044,16 @@
 
                 // ===== SAVE DATA TO DATABASE =====
                 if (typeof CMTLabsAPI !== 'undefined') {
-                    // Extract just the unique test ID from QR data (before the pipe if it exists)
+                    // Extract just the unique test ID from QR data
                     let testId = qrData;
 
-                    // If qrData contains a pipe, take only the first part (the unique ID)
-                    if (qrData && qrData.includes('|')) {
+                    // If qrData is a URL, extract the testId parameter
+                    if (qrData && qrData.includes('testId=')) {
+                        const url = new URL(qrData);
+                        testId = url.searchParams.get('testId') || qrData;
+                    }
+                    // If qrData contains a pipe, take only the first part (legacy format)
+                    else if (qrData && qrData.includes('|')) {
                         testId = qrData.split('|')[0];
                     }
 
