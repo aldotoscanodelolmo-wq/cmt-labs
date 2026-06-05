@@ -3046,21 +3046,29 @@
                 if (typeof CMTLabsAPI !== 'undefined') {
                     // Extract just the unique test ID from QR data
                     let testId = qrData;
+                    console.log('🔍 Raw QR Data:', qrData);
 
                     // If qrData is a URL, extract the testId parameter
                     if (qrData && qrData.includes('testId=')) {
-                        const url = new URL(qrData);
-                        testId = url.searchParams.get('testId') || qrData;
+                        try {
+                            const url = new URL(qrData);
+                            const extracted = url.searchParams.get('testId');
+                            console.log('✅ Extracted testId from URL:', extracted);
+                            testId = extracted || qrData;
+                        } catch (err) {
+                            console.error('❌ URL parsing error:', err.message);
+                        }
                     }
                     // If qrData contains a pipe, take only the first part (legacy format)
                     else if (qrData && qrData.includes('|')) {
                         testId = qrData.split('|')[0];
+                        console.log('📌 Extracted from pipe:', testId);
                     }
 
                     // Clean up test ID - remove any extra text or HTML
                     testId = testId.replace(/\s+/g, ' ').trim();
 
-                    console.log('Final Test ID to save:', testId);
+                    console.log('📊 Final Test ID to save:', testId);
 
                     // If still empty, generate a fallback ID
                     if (!testId || testId === 'TEST-undefined') {
