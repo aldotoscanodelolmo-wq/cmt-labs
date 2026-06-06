@@ -3375,6 +3375,31 @@
         }
 
         async function searchByQRCode() {
+            const qrInput = document.getElementById('qrCodeInput');
+            if (!qrInput || !qrInput.value.trim()) {
+                alert('⚠️ Please enter a Test ID or scan a QR code');
+                return;
+            }
+
+            const testId = qrInput.value.trim();
+            console.log('🔍 Searching for test:', testId);
+
+            try {
+                // Call the getTest API to retrieve the specific test
+                const result = await CMTLabsAPI.getTest(testId);
+                console.log('✅ Found test:', result);
+
+                if (result && result.test) {
+                    // Display the test result
+                    displayTestResult(result.test);
+                } else {
+                    alert('❌ Test not found');
+                }
+            } catch (error) {
+                console.error('❌ Search error:', error);
+                alert('Error searching for test. Make sure the Test ID is correct.');
+            }
+        }
 
         function openQRScanner() {
             // Create modal for camera
