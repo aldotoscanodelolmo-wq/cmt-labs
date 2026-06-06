@@ -3950,10 +3950,16 @@
             }
 
             async handleLogin() {
+                alert('🔐 handleLogin() called - starting login...');
+                console.log('🔐 handleLogin() called');
+
                 const email = document.getElementById('loginEmail').value.trim();
                 const password = document.getElementById('loginPassword').value;
                 const errorDiv = document.getElementById('loginError');
                 const loginBtn = document.getElementById('loginBtn');
+
+                console.log('📧 Email:', email);
+                console.log('🔑 Password length:', password.length);
 
                 // Clear previous errors
                 errorDiv.textContent = '';
