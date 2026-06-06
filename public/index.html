@@ -3491,36 +3491,6 @@
             }
         }
 
-            const qrCode = document.getElementById('qrCodeInput').value.trim();
-            if (!qrCode) {
-                alert('Please enter or scan a QR code');
-                return;
-            }
-
-            console.log('🔍 Searching for QR code:', qrCode);
-
-            try {
-                // Use CMTLabsAPI which has the correct Railway backend URL
-                const result = await CMTLabsAPI.getTest(qrCode);
-                console.log('API response:', result);
-
-                if (result && result.test) {
-                    console.log('✅ Found test:', result.test.test_id);
-                    displayResults([result.test]);
-                } else {
-                    console.warn('❌ Test not found with ID:', qrCode);
-                    alert(`❌ No test found with ID: ${qrCode}\n\nMake sure you entered the correct Test ID.`);
-                    document.getElementById('noResults').style.display = 'block';
-                    document.getElementById('retrieveResults').style.display = 'none';
-                }
-            } catch (error) {
-                console.error('❌ QR search error:', error);
-                alert('❌ Error searching for test. Check the browser console for details.');
-                document.getElementById('noResults').style.display = 'block';
-                document.getElementById('retrieveResults').style.display = 'none';
-            }
-        }
-
         function displayResults(tests) {
             const resultsDiv = document.getElementById('retrieveResults');
             const resultsList = document.getElementById('resultsList');
