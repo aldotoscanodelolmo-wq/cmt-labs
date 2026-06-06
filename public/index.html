@@ -4086,10 +4086,20 @@
             if (testId) {
                 console.log('🔍 QR code scanned - Auto-retrieving test:', testId);
                 setTimeout(() => {
-                    const input = document.getElementById('retrieveSearchInput');
-                    if (input) input.value = testId;
-                    const btn = document.querySelector('button[onclick="searchQRCode()"]');
-                    if (btn) btn.click();
+                    const input = document.getElementById('qrCodeInput');
+                    if (input) {
+                        input.value = testId;
+                        console.log('✅ Filled QR code input with:', testId);
+                    } else {
+                        console.warn('⚠️ qrCodeInput element not found');
+                    }
+                    // Call searchByQRCode function directly
+                    if (typeof searchByQRCode === 'function') {
+                        console.log('🔍 Calling searchByQRCode()...');
+                        searchByQRCode();
+                    } else {
+                        console.warn('⚠️ searchByQRCode function not found');
+                    }
                 }, 500);
             }
         });
