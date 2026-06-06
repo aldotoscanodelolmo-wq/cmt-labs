@@ -4085,22 +4085,50 @@
             const testId = params.get('testId');
             if (testId) {
                 console.log('🔍 QR code scanned - Auto-retrieving test:', testId);
+                // Wait a bit longer to ensure page is fully rendered
                 setTimeout(() => {
+                    console.log('⏳ Attempting to retrieve test:', testId);
                     const input = document.getElementById('qrCodeInput');
+
                     if (input) {
+                        // Fill input and search
                         input.value = testId;
-                        console.log('✅ Filled QR code input with:', testId);
+                        console.log('✅ Filled qrCodeInput with:', testId);
+
+                        // Try to call searchByQRCode
+                        if (typeof searchByQRCode === 'function') {
+                            console.log('🔍 Calling searchByQRCode()...');
+                            searchByQRCode();
+                        } else {
+                            console.warn('⚠️ searchByQRCode function not found, will try after delay');
+                            // Try again after another delay
+                            setTimeout(() => {
+                                if (typeof searchByQRCode === 'function') {
+                                    searchByQRCode();
+                                }
+                            }, 1000);
+                        }
                     } else {
-                        console.warn('⚠️ qrCodeInput element not found');
+                        console.warn('⚠️ qrCodeInput not found yet, page may not be fully loaded');
+                        // Scroll to retrieve section to ensure it loads
+                        const retrieveSection = document.querySelector('[style*="Retrieve Test"]') ||
+                                             document.querySelector('h3');
+                        if (retrieveSection) {
+                            retrieveSection.scrollIntoView({ behavior: 'smooth' });
+                            console.log('📜 Scrolled to Retrieve Test section');
+                        }
+                        // Try again after scrolling
+                        setTimeout(() => {
+                            const input2 = document.getElementById('qrCodeInput');
+                            if (input2) {
+                                input2.value = testId;
+                                if (typeof searchByQRCode === 'function') {
+                                    searchByQRCode();
+                                }
+                            }
+                        }, 1000);
                     }
-                    // Call searchByQRCode function directly
-                    if (typeof searchByQRCode === 'function') {
-                        console.log('🔍 Calling searchByQRCode()...');
-                        searchByQRCode();
-                    } else {
-                        console.warn('⚠️ searchByQRCode function not found');
-                    }
-                }, 500);
+                }, 1000);
             }
         });
 
