@@ -27,6 +27,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
+    'https://cmt-labs.vercel.app',
     process.env.FRONTEND_URL || 'https://yourdomain.vercel.app'
   ],
   credentials: true
