@@ -3969,17 +3969,41 @@
                     loginBtn.disabled = true;
                     loginBtn.textContent = 'Signing in...';
 
+                    console.log('🔐 Attempting login with email:', email);
+
                     const response = await CMTLabsAPI.login(email, password);
 
-                    console.log('✅ Login successful:', response);
+                    console.log('✅ Login API response successful:', response);
+
+                    // Verify token was saved
+                    const savedToken = CMTLabsAPI.getToken();
+                    console.log('💾 Token saved to localStorage:', !!savedToken);
+
+                    // Verify authenticated
+                    const isAuth = CMTLabsAPI.isAuthenticated();
+                    console.log('🔑 isAuthenticated() returns:', isAuth);
 
                     // Update UI and hide modal
+                    console.log('🎯 Calling showAuthenticated()...');
                     this.showAuthenticated();
+
+                    console.log('👁️ Hiding auth modal...');
                     this.authModal.classList.add('hidden');
+
+                    console.log('✨ Login complete!');
 
                 } catch (error) {
                     console.error('❌ Login error:', error);
-                    this.showError(errorDiv, error.message || 'Login failed. Please try again.');
+                    console.error('📋 Error message:', error.message);
+                    console.error('🔗 Error stack:', error.stack);
+
+                    let errorMsg = error.message || 'Login failed. Please try again.';
+                    if (error.message && error.message.includes('Failed to fetch')) {
+                        errorMsg = '⚠️ Network error - Cannot reach server. Check your connection.';
+                    }
+
+                    this.showError(errorDiv, errorMsg);
+                    alert('❌ Login Error: ' + errorMsg);
                 } finally {
                     loginBtn.disabled = false;
                     loginBtn.textContent = 'Sign In';
